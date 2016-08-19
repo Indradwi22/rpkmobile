@@ -6,13 +6,13 @@
 
 	<head>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-        <!-- add css -->
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<!-- add css -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/chosen.css">
-        <!-- end css -->
+		<!-- end css -->
 		<meta charset="UTF-8">
-		<title>Blank App Designer Cordova Web App Project Template</title>
+		<title>Tambah Stok RPK</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 		<!--
@@ -72,7 +72,7 @@
 		<script src="xdk/init-dev.js"></script>
 		<!-- normalizes device and document ready events, see file for details -->
 		<script type="application/javascript" src="lib/jquery.min.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type="application/javascript" src="marginal/marginal-position.min.js"></script>
 
 		<!-- add lib javascript -->
@@ -88,238 +88,241 @@
 		<script src="js/bootbox.js"></script>
 		<!-- end add java script-->
 		<script>
-            function clearform(){
-                $('#validation-form input[name=idstok]').val("");
-                $('#namarpk').val('').trigger('chosen:updated');
-                $('#komoditi').val('').trigger('chosen:updated');
-                $('#jumlah').val('1');
-                $('#tanggal').val(new Date());
-			     $("#tanggal").datepicker("setValue", new Date());
-            }
-            function combo_komoditi(){
-                $("#komoditi").chosen({width: "100%"});
-                $.ajax({
-                    url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
-                    success: function(response) {
-                        $("#komoditi").empty();
-                        $("#komoditi").append($("<option></option>").val('').html(''));
-                        $.each(response.aaData, function () {
-                            $("#komoditi").append($("<option></option>").val(this[0]).html(this[2]));
-                        });
-                        $('#komoditi').trigger('chosen:updated');
-                    },
-                    error: function(response){
-                        console.log('error');
-                    }
-                });
-            }
-            function combo_namarpk(){
-                $("#namarpk").chosen({width: "100%"});
-                $.ajax({
-                    url: "http://"+ipserver+"/api/toko_rpk/?X-API-KEY=rpkbulogapi&format=json",
-                    success: function(response) {
-                        $("#namarpk").empty();
-                        $("#namarpk").append($("<option></option>").val('').html(''));
-                        $.each(response.aaData, function () {
-                            $("#namarpk").append($("<option></option>").val(this[0]).html(this[1]));
-                        });
-                        $('#namarpk').trigger('chosen:updated');
-                    },
-                    error: function(response){
-                        console.log('error');
-                    }
-                });
-            }
-			jQuery(function($){
-			                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
-			                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
-			                     });
-                combo_namarpk();
-                combo_komoditi();
-                $("#adddata").on("click", function(){
-                            clearform();
-                    }); 
-			                toastr.options = {
-			                                    "closeButton": true,
-			                                    "debug": false,
-			                                    "newestOnTop": true,
-			                                    "progressBar": false,
-			                                    "positionClass": "toast-top-right",
-			                                    "preventDuplicates": false,
-			                                    "onclick": null,
-			                                    "showDuration": "300",
-			                                    "hideDuration": "1000",
-			                                    "timeOut": "2500",
-			                                    "extendedTimeOut": "1000",
-			                                    "showEasing": "swing",
-			                                    "hideEasing": "linear",
-			                                    "showMethod": "fadeIn",
-			                                    "hideMethod": "fadeOut"
-			                                }
-			                $('#tanggal').datepicker({
-			                    format: 'yyyy-mm-dd'
-			                });
+			function clearform(){
+			                $('#validation-form input[name=idstok]').val("");
+			                $('#namarpk').val('').trigger('chosen:updated');
+			                $('#komoditi').val('').trigger('chosen:updated');
+			                $('#jumlah').val('1');
 			                $('#tanggal').val(new Date());
-			                $("#tanggal").datepicker("setValue", new Date());
-			               var table = $('#example').DataTable( {
-			                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allstok?X-API-KEY=rpkbulogapi&format=json", "dataSrc": "aaData" },
-			                        "columns": [
-			                            { "data": null },
-			                            { "data": 7 },
-			                            { "data": 5 },
-			                            { "data": 3 },
-			                            { "data": 6 },
-			                            { "data": 4 },
-			                            { "data": null }
-			                        ],
-                               "columnDefs": [ {
-                                    "targets": -1,
-                                    "defaultContent":
-                                        "<a  title='Edit' style='cursor: pointer;' id='myedit'><i class=\"fa fa-pencil\"></i>Edit</a> " +
-                                        "<a  title='Delete' style='cursor: pointer;' id='mydelete'><i class=\"fa fa-trash-o\"></i>Hapus</a>"
-                                    } ],
-			                        "fnCreatedRow": function (row, data, index) {
-										$('td', row).eq(0).html(index + 1);
-									},
-			                        deferRender:    true,
-			                        scroller:       true,
-			                        "processing": true,
-			                        "serverSide": false,
-			                        "scrollX": true
-			                } );
-                
-                $('#example tbody').on( 'click', '#myedit', function () {
-                    var data = table.row( $(this).parents('tr') ).data();
-                    clearform();
-                    $('#validation-form input[name=idstok]').val(data[0]);
-                    $('#namarpk').val(data[2]).trigger('chosen:updated');
-                    $('#komoditi').val(data[1]).trigger('chosen:updated');
-                    $('#jumlah').val(data[3]);
-                    $('#tanggal').val(data[4]);
-                    $("#tanggal").datepicker("setValue", data[4]);
-                    $('#myModal').modal('show');
-                });
-                
-                $('#example tbody').on( 'click', '#mydelete', function () {
-                    var data = table.row( $(this).parents('tr') ).data();
-                    bootbox.confirm("Apa anda yakin Menghapus data ini?", function(result) {
-                        if(result) {
-                            //$("#loadingpage").fadeIn("slow");
-                            $.ajax({
-                                url: "http://"+ipserver+"/api/stok_rpk/delete",
-                                type: "DELETE",
-                                data: {
-                                    'id_stok':data[0],
-                                    'X-API-KEY':'rpkbulogapi'
-                                },
-                                success: function(response) {
-                                    //$("#loadingpage").fadeOut("slow");
-                                    if(response.status){
-                                        table.ajax.reload();
-                                        toastr["success"]('Berhasil Menghapus Data','Success');
-                                    }else{
-                                        toastr["error"](response.message,'Error');
-                                    }
-                                },
-                                error: function(response){
-                                    //$("#loadingpage").fadeOut("slow");
-                                    toastr["error"]('Gagal mengakses data','error');
-                                }
-                            });
-                        }
+						     $("#tanggal").datepicker("setValue", new Date());
+			            }
+			            function combo_komoditi(){
+			                $("#komoditi").chosen({width: "100%"});
+			                $.ajax({
+			                    url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
+			                    success: function(response) {
+			                        $("#komoditi").empty();
+			                        $("#komoditi").append($("<option></option>").val('').html(''));
+			                        $.each(response.aaData, function () {
+			                            $("#komoditi").append($("<option></option>").val(this[0]).html(this[2]));
+			                        });
+			                        $('#komoditi').trigger('chosen:updated');
+			                    },
+			                    error: function(response){
+			                        console.log('error');
+			                    }
+			                });
+			            }
+			            function combo_namarpk(){
+			                $("#namarpk").chosen({width: "100%"});
+			                $.ajax({
+			                    url: "http://"+ipserver+"/api/toko_rpk/?X-API-KEY=rpkbulogapi&format=json",
+			                    success: function(response) {
+			                        $("#namarpk").empty();
+			                        $("#namarpk").append($("<option></option>").val('').html(''));
+			                        $.each(response.aaData, function () {
+			                            $("#namarpk").append($("<option></option>").val(this[0]).html(this[1]));
+			                        });
+			                        $('#namarpk').trigger('chosen:updated');
+			                    },
+			                    error: function(response){
+			                        console.log('error');
+			                    }
+			                });
+			            }
+						jQuery(function($){
+						                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
+						                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
+						                     });
+			                combo_namarpk();
+			                combo_komoditi();
+			                $("#adddata").on("click", function(){
+			                            clearform();
+			                    }); 
+                            $("#bt-dashboard").on("click", function(){
+                            window.location = "dashboard_admin_rpk.html";
                     });
-                });
-                
-                $('#validation-form').validate({
-                            errorElement: 'div',
-                            errorClass: 'help-block',
-                            focusInvalid: false,
-                            ignore: "",
-                            rules: {
-                                tanggal: {
-                                    required:true
-                                },
-                                namarpk: {
-                                    required:true
-                                },
-                                komoditi: {
-                                    required:true
-                                },
-                                jumlah: {
-                                    number: true,
-                                    required:true
-                                }
-                            },
-
-                            messages: {
-                                tanggal: {
-                                    required: "Tolong isi Tanggal"
-                                },
-                                namarpk: {
-                                    required: "Tolong Pilih Nama RPK"
-                                },
-                                komoditi: {
-                                    required: "Tolong Pilih Komoditi"
-                                },
-                                jumlah: {
-                                    required: "Tolong isi Jumlah",
-                                    number: "Data Harus Angka"
-                                }
-                            },
-
-
-                            highlight: function (e) {
-                                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-                            },
-
-                            success: function (e) {
-                                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-                                $(e).remove();
-                            },
-                            onkeyup: function(element) { $(element).valid(); },
-                            invalidHandler: function (form) {
-                            }
-                        });
-
-                    $('#validation-form').ajaxForm({
-                        // your ajaxForm code here
-                        beforeSubmit : function(arr, $form, options){
-                            //arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
-                            //return check();
-                        },
-                        url:"http://"+ipserver+"/api/stok_rpk/insert",
-                        beforeSend: function(arr) {
-                            //$("#preloader").fadeIn("slow");
-                        },
-                        uploadProgress: function(event, position, total, percentComplete) {
-                            //$("#preloader").fadeIn("slow");
-                        },
-                        success: function(response) {
-                            if(response.status) {
-                                table.ajax.reload();
-                                clearform();
-                                $('#myModal').modal('hide');
-                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
-                                toastr["success"]('Data Tersimpan','Success');
-                                /*window.setTimeout(function(){ window.location = "dashboard_user_rpk.html"; },3000);*/
-                            }else{
-                                for (var prop in response.message) {
-                                    toastr["error"](response.message[prop],prop);
-                                }
-                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
-                            }
-                           // $("#preloader").fadeOut("slow");
-                        },
-                        error: function() {
-                            toastr["error"]('Gagal mengakses data','error');
-                           // $("#preloader").fadeOut("slow");
-                        }
-                        ,
-                        complete: function(response) {
-                         //   $('.fileupload').fileupload('reset');
-                        }
-                    });
-			    });
+						                toastr.options = {
+						                                    "closeButton": true,
+						                                    "debug": false,
+						                                    "newestOnTop": true,
+						                                    "progressBar": false,
+						                                    "positionClass": "toast-top-right",
+						                                    "preventDuplicates": false,
+						                                    "onclick": null,
+						                                    "showDuration": "300",
+						                                    "hideDuration": "1000",
+						                                    "timeOut": "2500",
+						                                    "extendedTimeOut": "1000",
+						                                    "showEasing": "swing",
+						                                    "hideEasing": "linear",
+						                                    "showMethod": "fadeIn",
+						                                    "hideMethod": "fadeOut"
+						                                }
+						                $('#tanggal').datepicker({
+						                    format: 'yyyy-mm-dd'
+						                });
+						                $('#tanggal').val(new Date());
+						                $("#tanggal").datepicker("setValue", new Date());
+						               var table = $('#example').DataTable( {
+						                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allstok?X-API-KEY=rpkbulogapi&format=json", "dataSrc": "aaData" },
+						                        "columns": [
+						                            { "data": null },
+						                            { "data": 7 },
+						                            { "data": 5 },
+						                            { "data": 3 },
+						                            { "data": 6 },
+						                            { "data": 4 },
+						                            { "data": null }
+						                        ],
+			                               "columnDefs": [ {
+			                                    "targets": -1,
+			                                    "defaultContent":
+			                                        "<a  title='Edit' style='cursor: pointer;' id='myedit'><i class=\"fa fa-pencil\"></i>Edit</a> " +
+			                                        "<a  title='Delete' style='cursor: pointer;' id='mydelete'><i class=\"fa fa-trash-o\"></i>Hapus</a>"
+			                                    } ],
+						                        "fnCreatedRow": function (row, data, index) {
+													$('td', row).eq(0).html(index + 1);
+												},
+						                        deferRender:    true,
+						                        scroller:       true,
+						                        "processing": true,
+						                        "serverSide": false,
+						                        "scrollX": true
+						                } );
+			                
+			                $('#example tbody').on( 'click', '#myedit', function () {
+			                    var data = table.row( $(this).parents('tr') ).data();
+			                    clearform();
+			                    $('#validation-form input[name=idstok]').val(data[0]);
+			                    $('#namarpk').val(data[2]).trigger('chosen:updated');
+			                    $('#komoditi').val(data[1]).trigger('chosen:updated');
+			                    $('#jumlah').val(data[3]);
+			                    $('#tanggal').val(data[4]);
+			                    $("#tanggal").datepicker("setValue", data[4]);
+			                    $('#myModal').modal('show');
+			                });
+			                
+			                $('#example tbody').on( 'click', '#mydelete', function () {
+			                    var data = table.row( $(this).parents('tr') ).data();
+			                    bootbox.confirm("Apa anda yakin Menghapus data ini?", function(result) {
+			                        if(result) {
+			                            //$("#loadingpage").fadeIn("slow");
+			                            $.ajax({
+			                                url: "http://"+ipserver+"/api/stok_rpk/delete",
+			                                type: "DELETE",
+			                                data: {
+			                                    'id_stok':data[0],
+			                                    'X-API-KEY':'rpkbulogapi'
+			                                },
+			                                success: function(response) {
+			                                    //$("#loadingpage").fadeOut("slow");
+			                                    if(response.status){
+			                                        table.ajax.reload();
+			                                        toastr["success"]('Berhasil Menghapus Data','Success');
+			                                    }else{
+			                                        toastr["error"](response.message,'Error');
+			                                    }
+			                                },
+			                                error: function(response){
+			                                    //$("#loadingpage").fadeOut("slow");
+			                                    toastr["error"]('Gagal mengakses data','error');
+			                                }
+			                            });
+			                        }
+			                    });
+			                });
+			                
+			                $('#validation-form').validate({
+			                            errorElement: 'div',
+			                            errorClass: 'help-block',
+			                            focusInvalid: false,
+			                            ignore: "",
+			                            rules: {
+			                                tanggal: {
+			                                    required:true
+			                                },
+			                                namarpk: {
+			                                    required:true
+			                                },
+			                                komoditi: {
+			                                    required:true
+			                                },
+			                                jumlah: {
+			                                    number: true,
+			                                    required:true
+			                                }
+			                            },
+			
+			                            messages: {
+			                                tanggal: {
+			                                    required: "Tolong isi Tanggal"
+			                                },
+			                                namarpk: {
+			                                    required: "Tolong Pilih Nama RPK"
+			                                },
+			                                komoditi: {
+			                                    required: "Tolong Pilih Komoditi"
+			                                },
+			                                jumlah: {
+			                                    required: "Tolong isi Jumlah",
+			                                    number: "Data Harus Angka"
+			                                }
+			                            },
+			
+			
+			                            highlight: function (e) {
+			                                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+			                            },
+			
+			                            success: function (e) {
+			                                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+			                                $(e).remove();
+			                            },
+			                            onkeyup: function(element) { $(element).valid(); },
+			                            invalidHandler: function (form) {
+			                            }
+			                        });
+			
+			                    $('#validation-form').ajaxForm({
+			                        // your ajaxForm code here
+			                        beforeSubmit : function(arr, $form, options){
+			                            //arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
+			                            //return check();
+			                        },
+			                        url:"http://"+ipserver+"/api/stok_rpk/insert",
+			                        beforeSend: function(arr) {
+			                            //$("#preloader").fadeIn("slow");
+			                        },
+			                        uploadProgress: function(event, position, total, percentComplete) {
+			                            //$("#preloader").fadeIn("slow");
+			                        },
+			                        success: function(response) {
+			                            if(response.status) {
+			                                table.ajax.reload();
+			                                clearform();
+			                                $('#myModal').modal('hide');
+			                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+			                                toastr["success"]('Data Tersimpan','Success');
+			                                /*window.setTimeout(function(){ window.location = "dashboard_user_rpk.html"; },3000);*/
+			                            }else{
+			                                for (var prop in response.message) {
+			                                    toastr["error"](response.message[prop],prop);
+			                                }
+			                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+			                            }
+			                           // $("#preloader").fadeOut("slow");
+			                        },
+			                        error: function() {
+			                            toastr["error"]('Gagal mengakses data','error');
+			                           // $("#preloader").fadeOut("slow");
+			                        }
+			                        ,
+			                        complete: function(response) {
+			                         //   $('.fileupload').fileupload('reset');
+			                        }
+			                    });
+						    });
 		</script>
 	</head>
 
@@ -332,7 +335,10 @@
 				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
 					<h2>TAMBAH STOK RPK</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
-					<div class="widget-container content-area horiz-area wrapping-col left"></div>
+					<div class="widget-container content-area horiz-area wrapping-col left">
+						<button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+						</button>
+					</div>
 					<div class="widget-container content-area horiz-area wrapping-col right"></div>
 				</div>
 				<div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
@@ -359,7 +365,6 @@
 										</table>
 									</div>
 								</div>
-                                    
 
 								<span class="uib_shim"></span>
 							</div>

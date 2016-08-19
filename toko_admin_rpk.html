@@ -12,7 +12,7 @@
 		<link rel="stylesheet" type="text/css" href="css/chosen.css">
         <!-- end css -->
         <meta charset="UTF-8">
-        <title>Blank App Designer Cordova Web App Project Template</title>
+        <title>Daftar Toko</title>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
         <!--
@@ -123,6 +123,9 @@
                         $('#username').prop('readonly', false);
                         $('#password').prop('readonly', false);
                     }); 
+                $("#bt-dashboard").on("click", function(){
+                            window.location = "dashboard_admin_rpk.html";
+                    });  
 			                toastr.options = {
 			                                    "closeButton": true,
 			                                    "debug": false,
@@ -321,7 +324,10 @@
                 <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
                     <h2>Daftar Toko</h2>
                     <div class="widget-container wrapping-col single-centered"></div>
-                    <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left">
+                    <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+						</button>
+                    </div>
                     <div class="widget-container content-area horiz-area wrapping-col right"></div>
                 </div>
                 <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">

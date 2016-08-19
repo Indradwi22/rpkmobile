@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/chosen.css">
 		<meta charset="UTF-8">
-		<title>Blank App Designer Cordova Web App Project Template</title>
+		<title>Penjualan Komoditi</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 		<!--
@@ -148,6 +148,9 @@
                                     $('#nota').val(data.status);
                     //console.log(data.status);
                 });
+                $("#bt-dashboard").on("click", function(){
+                            window.location = "dashboard_user_rpk.html";
+                    });
                 
                 toastr.options = {
             "closeButton": true,
@@ -316,7 +319,10 @@
 				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
 					<h2>PENJUALAN</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
-					<div class="widget-container content-area horiz-area wrapping-col left"></div>
+					<div class="widget-container content-area horiz-area wrapping-col left">
+                    <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+						</button>
+                    </div>
 					<div class="widget-container content-area horiz-area wrapping-col right"></div>
 				</div>
 				<div class="upage-content ac0 content-area vertical-col left" id="page_53_79">

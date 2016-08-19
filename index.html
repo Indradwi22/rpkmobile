@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+    <!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+        <!-- add css -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+        <!-- end css -->
+        <meta charset="UTF-8">
+        <title>Login RPK Bulog</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+        <!--
+  * The "meta viewport" tag (below) helps your app size appropriately to a device's ideal viewport.
+  * Note that Windows device viewports work better when initialized using the @viewport CSS rule.
+  * For a quick overview of "meta viewport" and @viewport, see this article:
+  *   http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag
+  * To see how it works, try your app on a real device with and without a "meta viewport" tag.
+  * Additional useful references include:
+  *   http://www.quirksmode.org/mobile/viewports.html
+  *   http://www.quirksmode.org/mobile/metaviewport/devices.html
+  *   https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+-->
+
+        <!-- <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1"> -->
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=1, maximum-scale=2"> -->
+
+        <style>
+            /* following three (cascaded) are equivalent to above three meta viewport statements */
+            /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html */
+            /* see http://dev.w3.org/csswg/css-device-adapt/ */
+                @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+                @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+                /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+        </style>
+
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+        <link href="js/toastr/toastr.min.css" rel="stylesheet">
+
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work below -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+
+        <!-- Recommended location for your JavaScript libraries -->
+        <!-- These library references (below) are just examples to give you the general idea... -->
+        <!-- <script src="lib/mc/hammer.js"></script> -->
+        <!-- <script src="lib/ft/fastclick.js"></script> -->
+
+        <!--
+  * cordova.js is a phantom lib for "Cordova HTML5 web app," it does nothing in a "Standard HTML5 web app"
+  * Seeing a "Failed to load resource: net::ERR_FILE_NOT_FOUND" message caused by this "cordova.js" script?
+  * The cordova.js script is required if you convert your "Standard HTML5" project into a "Cordova" project.
+  * You can safely ignore the error or comment out this line if you will not be developing a Cordova app.
+-->
+        <script src="cordova.js" id="xdkJScordova_"></script>
+
+        <script src="js/app.js"></script>
+        <!-- for your event code, see README and file comments for details -->
+        <script src="js/init-app.js"></script>
+        <!-- for your init code, see README and file comments for details -->
+        <script src="xdk/init-dev.js"></script>
+        <!-- normalizes device and document ready events, see file for details -->
+        <script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+        <script type="application/javascript" src="js/jquery.validate.min.js"></script>
+        <script src="js/toastr/toastr.min.js"></script>
+        <script>
+            jQuery(function($){
+                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
+                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
+                    console.log(data.thash);
+                     });
+                
+                if (localStorage.getItem("myid") !== null) {
+                    if (localStorage.getItem("myrole") === '1'){
+                        window.location = 'dashboard_admin_rpk.html';   
+                    }else{
+                        window.location = 'dashboard_user_rpk.html';
+                    }
+                }
+                
+                toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "2500",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+                
+                
+                
+               $('#validation-form').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    username: {
+                        maxlength: 255,
+                        required:true
+                    },
+                    password: {
+                        maxlength: 255,
+                        required:true
+                    }
+                },
+
+                messages: {
+                    username: {
+                        required: "Tolong isi Username",
+                        maxlength: "Maximal 255 digit"
+                    },
+                    password: {
+                        required: "Tolong isi Password",
+                        maxlength: "Maximal 255 digit"
+                    }
+                },
+
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                    $(e).remove();
+                },
+                onkeyup: function(element) { $(element).valid(); },
+                submitHandler: function (form) {
+                    $.ajax({
+                        url: "http://"+ipserver+"/api/app/login",
+                        type: 'POST',
+                        contentType: "application/x-www-form-urlencoded",
+                        data: $('#validation-form').serialize(),
+                        success: function(response) {
+                            if(response.status) {
+                                if(response.status.role_rpk == "1"){
+                                    toastr["success"]('Berhasil Login Sebagai Admin','Success');
+                                    window.setTimeout(function(){ window.location = "dashboard_admin_rpk.html"; },3000);
+                                }else{
+                                    toastr["success"]('Berhasil Login','Success');
+                                    window.setTimeout(function(){ window.location = "dashboard_user_rpk.html"; },3000);
+                                }
+                                
+                                    localStorage.setItem('myid',response.status.iduser_rpk);
+                                    localStorage.setItem('myidtoko',response.status.idtoko_rpk);
+                                    localStorage.setItem('myrole',response.status.role_rpk);
+                                
+                                $.get("http://"+ipserver+"/api/toko_rpk", {'X-API-KEY':"rpkbulogapi",'idtoko':localStorage.getItem("myidtoko")}, function(data){
+                                    localStorage.setItem('mynamatoko',data.aaData[0][1]);
+                                    //localStorage.setItem('myidentitas',data.aaData[0][2]);
+                                 });
+                                
+                            }else{
+                                for (var prop in response.message) {
+                                    // if (response.message.hasOwnProperty(prop)) {
+                                    toastr["error"](response.message[prop],prop);
+                                    //}
+                                }
+                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+                            }
+                        },
+                        error: function(){
+                            toastr["error"]('Gagal mengakses data','error');
+                        }
+                    });
+                },
+                invalidHandler: function (form) {
+                }
+            });
+            });
+        </script>
+    </head>
+
+    <body>
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work above -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+        <div class="upage" id="mainpage">
+            <div class="upage-outer">
+                <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                    <h2>USER LOGIN</h2>
+                    <div class="widget-container wrapping-col single-centered"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                </div>
+                <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
+                    <div class="grid grid-pad urow uib_row_1 row-height-1" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
+                            <form id="validation-form" class="form-horizontal">
+                                <input type="hidden" name="csrf_rpk_bulog" id="csrf_rpk_bulog" />
+                                <input type="hidden" name="X-API-KEY" id="X-API-KEY" value="rpkbulogapi" />
+                                <div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Username:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+                                            <input class="wide-control form-control default" name="username" type="text" placeholder="Username">
+										</div>
+									</div>
+								</div>
+                                <div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Password:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+                                            <input class="wide-control form-control default" name="password" type="password" placeholder="Password">
+										</div>
+									</div>
+								</div>
+                                <div class="sbs-container widget uib_w_5 d-margins" data-uib="layout/side_by_side" data-ver="0">
+                                    <div class="leftContent widget-container"></div>
+                                    <div class="rightContent widget-container">
+                                        <button type="submit" class="btn widget uib_w_6 d-margins btn-success" data-uib="twitter%20bootstrap/button" data-ver="1" style="width:100%;"><i class="glyphicon glyphicon-ok button-icon-left" data-position="left"></i>&nbsp;Login</button>
+                                    </div>
+                                </div>
+                                <span class="uib_shim"></span>
+                            </form>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
+                </div>
+                <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+                    <h2>2016 © BULOG</h2>
+                    <div class="widget-container wrapping-col single-centered"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

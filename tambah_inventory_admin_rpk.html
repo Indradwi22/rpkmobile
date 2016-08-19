@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+	<!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+
+	<head>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+        <!-- add css -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/chosen.css">
+        <!-- end css -->
+		<meta charset="UTF-8">
+		<title>Blank App Designer Cordova Web App Project Template</title>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+		<!--
+  * The "meta viewport" tag (below) helps your app size appropriately to a device's ideal viewport.
+  * Note that Windows device viewports work better when initialized using the @viewport CSS rule.
+  * For a quick overview of "meta viewport" and @viewport, see this article:
+  *   http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag
+  * To see how it works, try your app on a real device with and without a "meta viewport" tag.
+  * Additional useful references include:
+  *   http://www.quirksmode.org/mobile/viewports.html
+  *   http://www.quirksmode.org/mobile/metaviewport/devices.html
+  *   https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+-->
+
+		<!-- <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1"> -->
+		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=1, maximum-scale=2"> -->
+
+		<style>
+			/* following three (cascaded) are equivalent to above three meta viewport statements */
+			            /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html */
+			            /* see http://dev.w3.org/csswg/css-device-adapt/ */
+			                @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+			                @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+			                /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+		</style>
+
+		<link rel="stylesheet" href="css/app.css">
+		<link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+
+		<!--start add css -->
+		<link rel="stylesheet" type="text/css" href="js/bootstrap-datepicker/css/datepicker-custom.css">
+		<link href="js/toastr/toastr.min.css" rel="stylesheet">
+		<!--end add css -->
+
+		<!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+		<!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work below -->
+		<!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+
+		<!-- Recommended location for your JavaScript libraries -->
+		<!-- These library references (below) are just examples to give you the general idea... -->
+		<!-- <script src="lib/mc/hammer.js"></script> -->
+		<!-- <script src="lib/ft/fastclick.js"></script> -->
+
+		<!--
+  * cordova.js is a phantom lib for "Cordova HTML5 web app," it does nothing in a "Standard HTML5 web app"
+  * Seeing a "Failed to load resource: net::ERR_FILE_NOT_FOUND" message caused by this "cordova.js" script?
+  * The cordova.js script is required if you convert your "Standard HTML5" project into a "Cordova" project.
+  * You can safely ignore the error or comment out this line if you will not be developing a Cordova app.
+-->
+		<script src="cordova.js" id="xdkJScordova_"></script>
+
+		<script src="js/app.js"></script>
+		<!-- for your event code, see README and file comments for details -->
+		<script src="js/init-app.js"></script>
+		<!-- for your init code, see README and file comments for details -->
+		<script src="xdk/init-dev.js"></script>
+		<!-- normalizes device and document ready events, see file for details -->
+		<script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+
+		<!-- add lib javascript -->
+		<script type="application/javascript" src="js/jquery.validate.min.js"></script>
+		<script type="application/javascript" src="js/jquery.form.js"></script>
+		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+		</script>
+		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js">
+		</script>
+		<script type="text/javascript" language="javascript" src="js/chosen.jquery.min.js"></script>
+		<script type="text/javascript" language="javascript" src="js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+		<script src="js/toastr/toastr.min.js"></script>
+		<script src="js/bootbox.js"></script>
+		<!-- end add java script-->
+		<script>
+            function clearform(){
+                $('#validation-form input[name=idstok]').val("");
+                $('#namarpk').val('').trigger('chosen:updated');
+                $('#komoditi').val('').trigger('chosen:updated');
+                $('#jumlah').val('1');
+                $('#tanggal').val(new Date());
+			     $("#tanggal").datepicker("setValue", new Date());
+            }
+            function combo_komoditi(){
+                $("#komoditi").chosen({width: "100%"});
+                $.ajax({
+                    url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
+                    success: function(response) {
+                        $("#komoditi").empty();
+                        $("#komoditi").append($("<option></option>").val('').html(''));
+                        $.each(response.aaData, function () {
+                            $("#komoditi").append($("<option></option>").val(this[0]).html(this[2]));
+                        });
+                        $('#komoditi').trigger('chosen:updated');
+                    },
+                    error: function(response){
+                        console.log('error');
+                    }
+                });
+            }
+            function combo_namarpk(){
+                $("#namarpk").chosen({width: "100%"});
+                $.ajax({
+                    url: "http://"+ipserver+"/api/toko_rpk/?X-API-KEY=rpkbulogapi&format=json",
+                    success: function(response) {
+                        $("#namarpk").empty();
+                        $("#namarpk").append($("<option></option>").val('').html(''));
+                        $.each(response.aaData, function () {
+                            $("#namarpk").append($("<option></option>").val(this[0]).html(this[1]));
+                        });
+                        $('#namarpk').trigger('chosen:updated');
+                    },
+                    error: function(response){
+                        console.log('error');
+                    }
+                });
+            }
+			jQuery(function($){
+			                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
+			                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
+			                     });
+                combo_namarpk();
+                combo_komoditi();
+                $("#adddata").on("click", function(){
+                            clearform();
+                    }); 
+			                toastr.options = {
+			                                    "closeButton": true,
+			                                    "debug": false,
+			                                    "newestOnTop": true,
+			                                    "progressBar": false,
+			                                    "positionClass": "toast-top-right",
+			                                    "preventDuplicates": false,
+			                                    "onclick": null,
+			                                    "showDuration": "300",
+			                                    "hideDuration": "1000",
+			                                    "timeOut": "2500",
+			                                    "extendedTimeOut": "1000",
+			                                    "showEasing": "swing",
+			                                    "hideEasing": "linear",
+			                                    "showMethod": "fadeIn",
+			                                    "hideMethod": "fadeOut"
+			                                }
+			                $('#tanggal').datepicker({
+			                    format: 'yyyy-mm-dd'
+			                });
+			                $('#tanggal').val(new Date());
+			                $("#tanggal").datepicker("setValue", new Date());
+			               var table = $('#example').DataTable( {
+			                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allstok?X-API-KEY=rpkbulogapi&format=json", "dataSrc": "aaData" },
+			                        "columns": [
+			                            { "data": null },
+			                            { "data": 7 },
+			                            { "data": 5 },
+			                            { "data": 3 },
+			                            { "data": 6 },
+			                            { "data": 4 },
+			                            { "data": null }
+			                        ],
+                               "columnDefs": [ {
+                                    "targets": -1,
+                                    "defaultContent":
+                                        "<a  title='Edit' style='cursor: pointer;' id='myedit'><i class=\"fa fa-pencil\"></i>Edit</a> " +
+                                        "<a  title='Delete' style='cursor: pointer;' id='mydelete'><i class=\"fa fa-trash-o\"></i>Hapus</a>"
+                                    } ],
+			                        "fnCreatedRow": function (row, data, index) {
+										$('td', row).eq(0).html(index + 1);
+									},
+			                        deferRender:    true,
+			                        scroller:       true,
+			                        "processing": true,
+			                        "serverSide": false,
+			                        "scrollX": true
+			                } );
+                
+                $('#example tbody').on( 'click', '#myedit', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    clearform();
+                    $('#validation-form input[name=idstok]').val(data[0]);
+                    $('#namarpk').val(data[2]).trigger('chosen:updated');
+                    $('#komoditi').val(data[1]).trigger('chosen:updated');
+                    $('#jumlah').val(data[3]);
+                    $('#tanggal').val(data[4]);
+                    $("#tanggal").datepicker("setValue", data[4]);
+                    $('#myModal').modal('show');
+                });
+                
+                $('#example tbody').on( 'click', '#mydelete', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    bootbox.confirm("Apa anda yakin Menghapus data ini?", function(result) {
+                        if(result) {
+                            //$("#loadingpage").fadeIn("slow");
+                            $.ajax({
+                                url: "http://"+ipserver+"/api/stok_rpk/delete",
+                                type: "DELETE",
+                                data: {
+                                    'id_stok':data[0],
+                                    'X-API-KEY':'rpkbulogapi'
+                                },
+                                success: function(response) {
+                                    //$("#loadingpage").fadeOut("slow");
+                                    if(response.status){
+                                        table.ajax.reload();
+                                        toastr["success"]('Berhasil Menghapus Data','Success');
+                                    }else{
+                                        toastr["error"](response.message,'Error');
+                                    }
+                                },
+                                error: function(response){
+                                    //$("#loadingpage").fadeOut("slow");
+                                    toastr["error"]('Gagal mengakses data','error');
+                                }
+                            });
+                        }
+                    });
+                });
+                
+                $('#validation-form').validate({
+                            errorElement: 'div',
+                            errorClass: 'help-block',
+                            focusInvalid: false,
+                            ignore: "",
+                            rules: {
+                                tanggal: {
+                                    required:true
+                                },
+                                namarpk: {
+                                    required:true
+                                },
+                                komoditi: {
+                                    required:true
+                                },
+                                jumlah: {
+                                    number: true,
+                                    required:true
+                                }
+                            },
+
+                            messages: {
+                                tanggal: {
+                                    required: "Tolong isi Tanggal"
+                                },
+                                namarpk: {
+                                    required: "Tolong Pilih Nama RPK"
+                                },
+                                komoditi: {
+                                    required: "Tolong Pilih Komoditi"
+                                },
+                                jumlah: {
+                                    required: "Tolong isi Jumlah",
+                                    number: "Data Harus Angka"
+                                }
+                            },
+
+
+                            highlight: function (e) {
+                                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                            },
+
+                            success: function (e) {
+                                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
+                                $(e).remove();
+                            },
+                            onkeyup: function(element) { $(element).valid(); },
+                            invalidHandler: function (form) {
+                            }
+                        });
+
+                    $('#validation-form').ajaxForm({
+                        // your ajaxForm code here
+                        beforeSubmit : function(arr, $form, options){
+                            //arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
+                            //return check();
+                        },
+                        url:"http://"+ipserver+"/api/stok_rpk/insert",
+                        beforeSend: function(arr) {
+                            //$("#preloader").fadeIn("slow");
+                        },
+                        uploadProgress: function(event, position, total, percentComplete) {
+                            //$("#preloader").fadeIn("slow");
+                        },
+                        success: function(response) {
+                            if(response.status) {
+                                table.ajax.reload();
+                                clearform();
+                                $('#myModal').modal('hide');
+                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+                                toastr["success"]('Data Tersimpan','Success');
+                                /*window.setTimeout(function(){ window.location = "dashboard_user_rpk.html"; },3000);*/
+                            }else{
+                                for (var prop in response.message) {
+                                    toastr["error"](response.message[prop],prop);
+                                }
+                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+                            }
+                           // $("#preloader").fadeOut("slow");
+                        },
+                        error: function() {
+                            toastr["error"]('Gagal mengakses data','error');
+                           // $("#preloader").fadeOut("slow");
+                        }
+                        ,
+                        complete: function(response) {
+                         //   $('.fileupload').fileupload('reset');
+                        }
+                    });
+			    });
+		</script>
+	</head>
+
+	<body>
+		<!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+		<!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work above -->
+		<!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+		<div class="upage" id="mainpage">
+			<div class="upage-outer">
+				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+					<h2>TAMBAH STOK RPK</h2>
+					<div class="widget-container wrapping-col single-centered"></div>
+					<div class="widget-container content-area horiz-area wrapping-col left"></div>
+					<div class="widget-container content-area horiz-area wrapping-col right"></div>
+				</div>
+				<div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
+					<div class="grid grid-pad urow uib_row_3 row-height-3" data-uib="layout/row" data-ver="0">
+						<div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
+							<div class="widget-container content-area vertical-col">
+								<button class="btn widget uib_w_4 d-margins btn-warning" data-uib="twitter%20bootstrap/button" data-ver="1" data-toggle="modal" data-target="#myModal" id="adddata"><i class="glyphicon glyphicon-plus button-icon-left" data-position="left"></i>Tambah</button>
+								<div class="tarea widget uib_w_3 d-margins" data-uib="media/text" data-ver="0" name="uib_w_3">
+									<div class="widget-container left-receptacle"></div>
+									<div class="widget-container right-receptacle"></div>
+									<div>
+										<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+											<thead>
+												<tr>
+													<th>No</th>
+													<th>RPK</th>
+													<th>Komoditi</th>
+													<th>Jumlah</th>
+													<th>Harga</th>
+													<th>Tanggal</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+                                    
+
+								<span class="uib_shim"></span>
+							</div>
+						</div>
+						<span class="uib_shim"></span>
+					</div>
+				</div>
+				<div class="uib-footer footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+					<h2>2016 © BULOG</h2>
+					<div class="widget-container wrapping-col single-centered"></div>
+					<div class="widget-container content-area horiz-area wrapping-col left"></div>
+					<div class="widget-container content-area horiz-area wrapping-col right"></div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<form method="post" id="validation-form" class="form-horizontal">
+				<input type="hidden" name="idstok" id="idstok">
+				<input type="hidden" name="csrf_rpk_bulog" id="csrf_rpk_bulog">
+				<input type="hidden" name="X-API-KEY" id="X-API-KEY" value="rpkbulogapi">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel">Tambah Barang</h4>
+						</div>
+						<div class="modal-body">
+							<div style="margin-left:10px;margin-right:10px;">
+
+								<div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Tanggal:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+											<input id="tanggal" name="tanggal" class="wide-control form-control default" type="text" placeholder="Tanggal">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Nama RPK:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+											<select name="namarpk" id="namarpk" class="chosen-select form-control"></select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Komoditi:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+											<select name="komoditi" id="komoditi" class="chosen-select form-control"></select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Jumlah:</label>
+
+									<div class="col-xs-12 col-sm-9">
+										<div class="clearfix">
+											<input class="wide-control form-control default" type="number" value="1" name="jumlah" id="jumlah" min="1" placeholder="Jumlah">
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok button-icon-left" data-position="left"></i>Save</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!-- end modal -->
+	</body>
+
+</html>

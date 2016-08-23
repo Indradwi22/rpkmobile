@@ -197,7 +197,7 @@
                                 url: "http://"+ipserver+"/api/toko_rpk/delete",
                                 type: "DELETE",
                                 data: {
-                                    'idretur':data[0],
+                                    'idtoko':data[0],
                                     'X-API-KEY':'rpkbulogapi'
                                 },
                                 success: function(response) {
@@ -224,6 +224,9 @@
                             focusInvalid: false,
                             ignore: "",
                             rules: {
+                                username: {
+                                    required:true
+                                },
                                 nama: {
                                     required:true
                                 },
@@ -242,6 +245,9 @@
                             },
 
                             messages: {
+                                username: {
+                                    required: "Tolong isi Username"
+                                },
                                 nama: {
                                     required: "Tolong isi Nama"
                                 },

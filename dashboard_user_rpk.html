@@ -81,6 +81,12 @@
                 $("#bt-laporan").on("click", function(){
                             window.location = "laporan_user_rpk.html";
                     }); 
+                $("#bt-request").on("click", function(){
+                            window.location = "request_user_rpk.html";
+                    }); 
+                $("#bt-listrequest").on("click", function(){
+                            window.location = "listrequest_user_rpk.html";
+                    }); 
                 $("#bt-logout").on("click", function(){
                     alert('Berhasil Logout');
                     localStorage.removeItem("myid");
@@ -103,7 +109,8 @@
                     <h2 id="namarpk">RPK Dashboard</h2>
                     <div class="widget-container wrapping-col single-centered"></div>
                     <div class="widget-container content-area horiz-area wrapping-col left"></div>
-                    <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col right">
+                    </div>
                 </div>
                 <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
 
@@ -119,6 +126,14 @@
                                     </div>
                                     <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_9" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-laporan"><i class="glyphicon glyphicon-tasks button-icon-top" data-position="top"></i>Laporan</button>
+                                    </div>
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_10" data-uib="layout/card" data-ver="0">
+                                        <button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-request"><i class="glyphicon glyphicon-retweet button-icon-top" data-position="top"></i>Request
+                                            <br>Stok</button>
+                                    </div>
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_10" data-uib="layout/card" data-ver="0">
+                                        <button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-listrequest"><i class="glyphicon glyphicon-retweet button-icon-top" data-position="top"></i>List
+                                            <br>Request</button>
                                     </div>
                                     <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_10" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_5 d-margins btn-danger" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-logout"><i class="glyphicon glyphicon-off button-icon-top" data-position="top"></i>Logout</button>

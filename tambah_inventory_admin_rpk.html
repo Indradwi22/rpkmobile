@@ -6,13 +6,12 @@
 
 	<head>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-		<!-- add css -->
+		<!--<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">-->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="css/chosen.css">
-		<!-- end css -->
+        <link rel="stylesheet" type="text/css" href="css/chosen.css">
 		<meta charset="UTF-8">
-		<title>Tambah Stok RPK</title>
+		<title>List Request</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 		<!--
@@ -42,12 +41,9 @@
 
 		<link rel="stylesheet" href="css/app.css">
 		<link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
-
-		<!--start add css -->
-		<link rel="stylesheet" type="text/css" href="js/bootstrap-datepicker/css/datepicker-custom.css">
+        <!--start add css -->
 		<link href="js/toastr/toastr.min.css" rel="stylesheet">
 		<!--end add css -->
-
 		<!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
 		<!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work below -->
 		<!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
@@ -74,46 +70,37 @@
 		<script type="application/javascript" src="lib/jquery.min.js"></script>
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type="application/javascript" src="marginal/marginal-position.min.js"></script>
-
-		<!-- add lib javascript -->
-		<script type="application/javascript" src="js/jquery.validate.min.js"></script>
-		<script type="application/javascript" src="js/jquery.form.js"></script>
+        <script type="application/javascript" src="js/jquery.form.js"></script>
 		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
 		</script>
 		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js">
 		</script>
-		<script type="text/javascript" language="javascript" src="js/chosen.jquery.min.js"></script>
+        <script type="text/javascript" language="javascript" src="js/chosen.jquery.min.js"></script>
 		<script type="text/javascript" language="javascript" src="js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-		<script src="js/toastr/toastr.min.js"></script>
-		<script src="js/bootbox.js"></script>
-		<!-- end add java script-->
-		<script>
-			function clearform(){
+        <script src="js/toastr/toastr.min.js"></script>
+        <script src="js/bootbox.js"></script>
+		<script type="text/javascript" class="init">
+            function now() {
+              date = new Date();
+
+              var day = ('0' + date.getDate()).slice(-2);
+              var month = ('0' + (date.getMonth() + 1)).slice(-2);
+              var year = date.getFullYear();
+
+              return year + '-' + month + '-' + day;
+            }
+            function clearform(){
 			                $('#validation-form input[name=idstok]').val("");
 			                $('#namarpk').val('').trigger('chosen:updated');
 			                $('#komoditi').val('').trigger('chosen:updated');
 			                $('#jumlah').val('1');
-			                $('#tanggal').val(new Date());
-						     $("#tanggal").datepicker("setValue", new Date());
+			                //$('#beftotal').val('0');
+			                $('#total').val('0');
+			                $('#norequest').val('');
+			                $('#idtoko').val('');
+			                $('#tanggal').val(now());
 			            }
-			            function combo_komoditi(){
-			                $("#komoditi").chosen({width: "100%"});
-			                $.ajax({
-			                    url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
-			                    success: function(response) {
-			                        $("#komoditi").empty();
-			                        $("#komoditi").append($("<option></option>").val('').html(''));
-			                        $.each(response.aaData, function () {
-			                            $("#komoditi").append($("<option></option>").val(this[0]).html(this[2]));
-			                        });
-			                        $('#komoditi').trigger('chosen:updated');
-			                    },
-			                    error: function(response){
-			                        console.log('error');
-			                    }
-			                });
-			            }
-			            function combo_namarpk(){
+            function combo_namarpk(){
 			                $("#namarpk").chosen({width: "100%"});
 			                $.ajax({
 			                    url: "http://"+ipserver+"/api/toko_rpk/?X-API-KEY=rpkbulogapi&format=json",
@@ -130,199 +117,334 @@
 			                    }
 			                });
 			            }
-						jQuery(function($){
-						                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
-						                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
-						                     });
-			                combo_namarpk();
-			                combo_komoditi();
-			                $("#adddata").on("click", function(){
-			                            clearform();
-			                    }); 
-                            $("#bt-dashboard").on("click", function(){
+            function combo_komoditi(){
+			     $("#komoditi").chosen({width: "100%"});
+			     $.ajax({
+			         url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
+			         success: function(response) {
+			                        $("#komoditi").empty();
+			                        $("#komoditi").append($("<option></option>").val('').html(''));
+			                        $.each(response.aaData, function () {
+			                            $("#komoditi").append($("<option></option>").val(this[0]+"|"+this[2]+"|"+this[4]).html(this[2]));
+			                        });
+			                        $('#komoditi').trigger('chosen:updated');
+			                    },
+			          error: function(response){
+			                        console.log('error');
+			                    }
+			      });
+			 }
+            function calculate(){
+                y = document.getElementsByName('jumlah[]');
+                z = document.getElementsByName('harga[]');
+                total = document.getElementsByName('total[]');
+                totala = document.getElementsByName('totala[]');
+                //var beftotal = $("#beftotal").val();
+                var alltotal = 0;
+                for(s=0;s<y.length;s++){
+                    var hasil =  y[s].value * z[s].value;
+                    total[s].value = hasil;
+                    alltotal += hasil;
+                }
+                for(s=0;s<totala.length;s++){
+                    //var hasil =  y[s].value * z[s].value;
+                    //total[s].value = hasil;
+                    alltotal += parseInt(totala[s].value);
+                }
+                
+                $("#alltotal").val(alltotal);
+            }
+			jQuery(function($) {
+                $.get("http://"+ipserver+"/api/app", {'X-API-KEY':"rpkbulogapi"}, function(data){
+                    $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
+                     });
+                combo_namarpk();
+                combo_komoditi();
+                $("#namarpk").chosen().change(function(){
+                    $('#idtoko').val($(this).val());
+                    $.get("http://"+ipserver+"/api/komoditi_rpk/getrequest", {'X-API-KEY':"rpkbulogapi",'idtoko':$(this).val()}, function(data){
+                                        $('#norequest').val(data.status);
+                    });
+                });
+                $("#bt-dashboard").on("click", function(){
                             window.location = "dashboard_admin_rpk.html";
                     });
-						                toastr.options = {
-						                                    "closeButton": true,
-						                                    "debug": false,
-						                                    "newestOnTop": true,
-						                                    "progressBar": false,
-						                                    "positionClass": "toast-top-right",
-						                                    "preventDuplicates": false,
-						                                    "onclick": null,
-						                                    "showDuration": "300",
-						                                    "hideDuration": "1000",
-						                                    "timeOut": "2500",
-						                                    "extendedTimeOut": "1000",
-						                                    "showEasing": "swing",
-						                                    "hideEasing": "linear",
-						                                    "showMethod": "fadeIn",
-						                                    "hideMethod": "fadeOut"
-						                                }
-						                $('#tanggal').datepicker({
-						                    format: 'yyyy-mm-dd'
-						                });
-						                $('#tanggal').val(new Date());
-						                $("#tanggal").datepicker("setValue", new Date());
-						               var table = $('#example').DataTable( {
-						                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allstok?X-API-KEY=rpkbulogapi&format=json", "dataSrc": "aaData" },
-						                        "columns": [
-						                            { "data": null },
-						                            { "data": 7 },
-						                            { "data": 5 },
-						                            { "data": 3 },
-						                            { "data": 6 },
-						                            { "data": 4 },
-						                            { "data": null }
-						                        ],
-			                               "columnDefs": [ {
-			                                    "targets": -1,
-			                                    "defaultContent":
-			                                        "<a  title='Edit' style='cursor: pointer;' id='myedit'><i class=\"fa fa-pencil\"></i>Edit</a> " +
-			                                        "<a  title='Delete' style='cursor: pointer;' id='mydelete'><i class=\"fa fa-trash-o\"></i>Hapus</a>"
-			                                    } ],
-						                        "fnCreatedRow": function (row, data, index) {
-													$('td', row).eq(0).html(index + 1);
-												},
-						                        deferRender:    true,
-						                        scroller:       true,
-						                        "processing": true,
-						                        "serverSide": false,
-						                        "scrollX": true
-						                } );
-			                
-			                $('#example tbody').on( 'click', '#myedit', function () {
-			                    var data = table.row( $(this).parents('tr') ).data();
-			                    clearform();
-			                    $('#validation-form input[name=idstok]').val(data[0]);
-			                    $('#namarpk').val(data[2]).trigger('chosen:updated');
-			                    $('#komoditi').val(data[1]).trigger('chosen:updated');
-			                    $('#jumlah').val(data[3]);
-			                    $('#tanggal').val(data[4]);
-			                    $("#tanggal").datepicker("setValue", data[4]);
-			                    $('#myModal').modal('show');
-			                });
-			                
-			                $('#example tbody').on( 'click', '#mydelete', function () {
-			                    var data = table.row( $(this).parents('tr') ).data();
-			                    bootbox.confirm("Apa anda yakin Menghapus data ini?", function(result) {
-			                        if(result) {
-			                            //$("#loadingpage").fadeIn("slow");
-			                            $.ajax({
-			                                url: "http://"+ipserver+"/api/stok_rpk/delete",
-			                                type: "DELETE",
-			                                data: {
-			                                    'id_stok':data[0],
-			                                    'X-API-KEY':'rpkbulogapi'
-			                                },
-			                                success: function(response) {
-			                                    //$("#loadingpage").fadeOut("slow");
-			                                    if(response.status){
-			                                        table.ajax.reload();
-			                                        toastr["success"]('Berhasil Menghapus Data','Success');
-			                                    }else{
-			                                        toastr["error"](response.message,'Error');
-			                                    }
-			                                },
-			                                error: function(response){
-			                                    //$("#loadingpage").fadeOut("slow");
-			                                    toastr["error"]('Gagal mengakses data','error');
-			                                }
-			                            });
-			                        }
-			                    });
-			                });
-			                
-			                $('#validation-form').validate({
-			                            errorElement: 'div',
-			                            errorClass: 'help-block',
-			                            focusInvalid: false,
-			                            ignore: "",
-			                            rules: {
-			                                tanggal: {
-			                                    required:true
-			                                },
-			                                namarpk: {
-			                                    required:true
-			                                },
-			                                komoditi: {
-			                                    required:true
-			                                },
-			                                jumlah: {
-			                                    number: true,
-			                                    required:true
-			                                }
-			                            },
-			
-			                            messages: {
-			                                tanggal: {
-			                                    required: "Tolong isi Tanggal"
-			                                },
-			                                namarpk: {
-			                                    required: "Tolong Pilih Nama RPK"
-			                                },
-			                                komoditi: {
-			                                    required: "Tolong Pilih Komoditi"
-			                                },
-			                                jumlah: {
-			                                    required: "Tolong isi Jumlah",
-			                                    number: "Data Harus Angka"
-			                                }
-			                            },
-			
-			
-			                            highlight: function (e) {
-			                                $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
-			                            },
-			
-			                            success: function (e) {
-			                                $(e).closest('.form-group').removeClass('has-error');//.addClass('has-info');
-			                                $(e).remove();
-			                            },
-			                            onkeyup: function(element) { $(element).valid(); },
-			                            invalidHandler: function (form) {
-			                            }
-			                        });
-			
-			                    $('#validation-form').ajaxForm({
-			                        // your ajaxForm code here
-			                        beforeSubmit : function(arr, $form, options){
-			                            //arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
-			                            //return check();
-			                        },
-			                        url:"http://"+ipserver+"/api/stok_rpk/insert",
-			                        beforeSend: function(arr) {
-			                            //$("#preloader").fadeIn("slow");
-			                        },
-			                        uploadProgress: function(event, position, total, percentComplete) {
-			                            //$("#preloader").fadeIn("slow");
-			                        },
-			                        success: function(response) {
-			                            if(response.status) {
-			                                table.ajax.reload();
-			                                clearform();
-			                                $('#myModal').modal('hide');
-			                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
-			                                toastr["success"]('Data Tersimpan','Success');
-			                                /*window.setTimeout(function(){ window.location = "dashboard_user_rpk.html"; },3000);*/
-			                            }else{
-			                                for (var prop in response.message) {
-			                                    toastr["error"](response.message[prop],prop);
-			                                }
-			                                $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
-			                            }
-			                           // $("#preloader").fadeOut("slow");
-			                        },
-			                        error: function() {
-			                            toastr["error"]('Gagal mengakses data','error');
-			                           // $("#preloader").fadeOut("slow");
-			                        }
-			                        ,
-			                        complete: function(response) {
-			                         //   $('.fileupload').fileupload('reset');
-			                        }
-			                    });
-						    });
+                $("#adddata").on("click", function(){
+                            clearform();
+                        $('#namarpk').attr('disabled', false).trigger('chosen:updated');
+                    detail.ajax.url( "http://"+ipserver+"/api/stok_rpk/detail?X-API-KEY=rpkbulogapi&noreq=ABC&format=json" ).load();
+                        $('#detail').hide();
+                        $('#detail_wrapper').hide();
+                        t.rows().remove().draw();
+                    }); 
+                var table = $('#example').DataTable( {
+                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allrequest?X-API-KEY=rpkbulogapi&idtoko="+localStorage.getItem("myidtoko")+"&status=all&format=json", "dataSrc": "aaData" },
+                        "columns": [
+                            { "data": 4 },
+                            { "data": 1 },
+                            { "data": 7 },
+                            { "data": 8 },
+                            { "data": null, render: function ( data, type, row ) {
+                                return (row[9] == '1') ? "Diterima" : "Belum Diterima";
+                            }},
+                            { "data": null, render: function ( data, type, row ) {
+                                var act = '<div class="btn-group"> <button type="button" class="btn btn-danger">Action</button> <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button> <ul class="dropdown-menu" role="menu">' +
+                            ' <li><a style="cursor: pointer" id="mydetail"><i class="fa fa-eye"></i> Detail</a></li>';
+                                if(row[9] == '0'){
+                                    act = act+' <li><a style="cursor: pointer" id="myterima"><i class="fa fa-check-circle"></i> Terima</a></li>';
+                                }else{
+                                    act = act+' <li><a style="cursor: pointer" id="mytdkterima"><i class="fa fa-minus-circle"></i> Belum Diterima</a></li>';
+                                }
+                                return act+'</ul></div>';
+                            } } // Action
+                        ],
+                        "order": [[ 0, "desc" ]],
+                        /*"columnDefs": [ {
+                            "targets": -1,
+                            "defaultContent":
+                                "<a  title='View' style='cursor: pointer;' id='mydetail'><i class=\"fa fa-pencil\"></i>View</a> "
+                        } ],*/
+                        scrollY: '250px',
+                        deferRender:    true,
+                        scroller:       true,
+                        "processing": true,
+                        "serverSide": false,
+                        "scrollX": true
+                } );
+                
+                var detail = $('#detail').DataTable( {
+                                "ajax": "http://"+ipserver+"/api/stok_rpk/detail?X-API-KEY=rpkbulogapi&noreq=ABC&format=json",
+                    "columns": [
+                            { data: null, render: function ( data, type, row ) {
+                                return row[4]+"<input type='hidden' name='kodebaranga[]' value='"+row[2]+"' />";
+                            } }, //komoditi
+                            { "data": 10 }, //jumlah
+                            { "data": 6 }, //harga
+                            { data: null, render: function ( data, type, row ) {
+                                return row[10]*row[6]+"<input type='hidden' name='totala[]' value='"+(row[10]*row[6])+"' />";
+                            } }, // Total
+                            { data: null, render: function ( data, type, row ) {
+                                return "<a style='cursor:pointer;' id='hapusdb'>Hapus</a>";
+                            } }, // Action
+                        ],
+                                deferRender:    true,
+                                scroller:       true,
+                                "processing": true,
+                                "serverSide": false,
+                                "scrollX": true
+                            } );
+                $('#detail tbody').on( 'click', '#hapusdb', function () {
+                    var data = detail.row( $(this).parents('tr') ).data();
+                    bootbox.confirm("Apa anda yakin Menghapus data ini?", function(result) {
+                        if(result) {
+                            //$("#loadingpage").fadeIn("slow");
+                            $.ajax({
+                                url: "http://"+ipserver+"/api/stok_rpk/delete",
+                                type: "DELETE",
+                                data: {
+                                    'id_stok':data[0],
+                                    'X-API-KEY':'rpkbulogapi'
+                                },
+                                success: function(response) {
+                                    //$("#loadingpage").fadeOut("slow");
+                                    if(response.status){
+                                        detail.ajax.reload();
+                                        table.ajax.reload();
+                                        calculate();
+                                        toastr["success"]('Berhasil Menghapus Data','Success');
+                                        
+                                    }else{
+                                        toastr["error"](response.message,'Error');
+                                    }
+                                },
+                                error: function(response){
+                                    //$("#loadingpage").fadeOut("slow");
+                                    toastr["error"]('Gagal mengakses data','error');
+                                }
+                            });
+                        }
+                    });
+                });
+                $('#example tbody').on( 'click', '#mydetail', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    $('#norequest').val(data[1]);
+                    $('#tanggal').val(data[4]);
+                    $('#alltotal').val(data[8]);
+                    //$('#beftotal').val(data[8]);
+                    $('#jumlah').val('1');
+                    //$('#namarpk');
+                    $('#komoditi').val('').trigger('chosen:updated');
+                    $('#namarpk').val(data[3]).attr('disabled', true).trigger('chosen:updated');
+                    $('#detail').show();
+                    $('#detail_wrapper').show();
+                    $('#idtoko').val(data[3]);
+                    //$('#dibayar').val(data[8]);
+                    //$('#kembali').val(data[9]);
+                    detail.ajax.url( "http://"+ipserver+"/api/stok_rpk/detail?X-API-KEY=rpkbulogapi&noreq="+data[1]+"&format=json" ).load();
+                    t.rows().remove().draw();
+                    $('#modal-detail').modal('show');
+                });
+                
+                $('#example tbody').on( 'click', '#myterima', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                        $.ajax({
+                         url: "http://"+ipserver+"/api/stok_rpk/verifikasi?X-API-KEY=rpkbulogapi&noreq="+data[1]+"&status=1&format=json",
+                         success: function(response) {
+                                       if(response.status){
+                                            table.ajax.reload();
+                                            toastr["success"]('Berhasil Memperbarui','Success');
+                                        }else{
+                                            toastr["error"]('Gagal Memperbarui','Error');
+                                        }
+                                    },
+                          error: function(response){
+                                        console.log('error');
+                                    }
+                      });
+                });
+
+                $('#example tbody').on( 'click', '#mytdkterima', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    $.ajax({
+                         url: "http://"+ipserver+"/api/stok_rpk/verifikasi?X-API-KEY=rpkbulogapi&noreq="+data[1]+"&status=0&format=json",
+                         success: function(response) {
+                                       if(response.status){
+                                            table.ajax.reload();
+                                            toastr["success"]('Berhasil Memperbarui','Success');
+                                        }else{
+                                            toastr["error"]('Gagal Memperbarui','Error');
+                                        }
+                                    },
+                          error: function(response){
+                                        console.log('error');
+                                    }
+                      });
+                });
+                
+                var t = $('#tabletambah').DataTable( {
+			                    "scrollX": true
+			                } );
+                
+                 toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "2500",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+                
+                /*$('#tanggal').datepicker({
+                    format: 'yyyy-mm-dd'
+                });
+                $('#tanggal').val(new Date());
+                $("#tanggal").datepicker("setValue", new Date());*/
+                 
+
+                $('#add-row').on( 'click', function () {
+                    var nama = $('#komoditi').val(),
+                        jumlah = $('#jumlah').val();
+                    var splitkomoditi = nama.split("|");
+                    
+                    if($('#barang').val() == '' || $('#jumlah').val() === null || $('#jumlah').val() == '0'){
+                        alert("Data tidak boleh kosong");
+                        exit;
+                    }
+                    
+                    z = document.getElementsByName('kodebaranga[]');
+                    for(s=0;s<z.length;s++){
+                        if(z[s].value == splitkomoditi[0]){
+                            alert(splitkomoditi[1]+" Sudah disimpan sebelumnya, Silahkan hapus terlebih dahulu");
+                            exit();
+                        }
+                    }
+                    x = document.getElementsByName('kodebarang[]');
+                    y = document.getElementsByName('jumlah[]');
+                    for(s=0;s<x.length;s++){
+                        if(x[s].value == splitkomoditi[0]){
+                            y[s].focus();
+						    y[s].select();
+                            y[s].value = jumlah;
+                            $('#myModal').modal('hide');
+                            $("#add-row-form").trigger('reset');
+                            calculate();
+                            exit();
+                        }
+                    }
+                    //if($("#add-row-form").isValid()) {
+                        
+                        t.row.add( [
+                            splitkomoditi[1]+"<input type='hidden' name='kodebarang[]' value='"+splitkomoditi[0]+"' /><input type='hidden' name='namabarang[]' value='"+splitkomoditi[1]+"' /><input type='hidden' name='harga[]' value='"+splitkomoditi[2]+"' />",
+                            "<input type='number' min='1' onkeyup='calculate();' name='jumlah[]' value='"+jumlah+"' />",
+                            splitkomoditi[2],
+                            "<input type='number' readonly name='total[]' />",
+                            "<a title='Delete' style='cursor: pointer;' id='mydelete'>Hapus</a>"
+                        ] ).draw(false);
+
+                        //$('#myModal').modal('hide');
+                    calculate();
+                    //$("#add-row-form").trigger('reset');
+                });
+                $('#tabletambah tbody').on( 'click', '#mydelete', function () {
+                    t.row($(this).parents('tr')).remove().draw( false );
+                    calculate();
+                });
+            
+
+        $('#validation-form').ajaxForm({
+            // your ajaxForm code here
+            beforeSubmit : function(arr, $form, options){
+               // arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
+                
+            },
+            url:"http://"+ipserver+"/api/stok_rpk/insertreq",
+            beforeSend: function(arr) {
+                //$("#preloader").fadeIn("slow");
+                //return check();
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                //$("#preloader").fadeIn("slow");
+            },
+            success: function(response) {
+                if(response.status) {
+                    table.ajax.reload();
+                    //clearform();
+                    //$('#myModal').modal('hide');
+                    detail.ajax.reload();
+                    t.rows().remove().draw();
+                    $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+                    toastr["success"]('Data Tersimpan','Success');
+                    calculate();
+                }else{
+                    for (var prop in response.message) {
+                        toastr["error"](response.message[prop],prop);
+                    }
+                    $('#validation-form input[name=csrf_rpk_bulog]').val(response.thash);
+                }
+               // $("#preloader").fadeOut("slow");
+            },
+            error: function() {
+                toastr["error"]('Gagal mengakses data','error');
+               // $("#preloader").fadeOut("slow");
+            }
+            ,
+            complete: function(response) {
+             //   $('.fileupload').fileupload('reset');
+            }
+        });
+                /*$("#bt-save").on("click", function(){
+                            detail.ajax.reload();
+                    });*/
+			 } );
 		</script>
 	</head>
 
@@ -333,118 +455,176 @@
 		<div class="upage" id="mainpage">
 			<div class="upage-outer">
 				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
-					<h2>TAMBAH STOK RPK</h2>
+					<h2>LIST REQUEST</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
 					<div class="widget-container content-area horiz-area wrapping-col left">
-						<button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+                    <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
 						</button>
-					</div>
+                    </div>
 					<div class="widget-container content-area horiz-area wrapping-col right"></div>
 				</div>
 				<div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
+
 					<div class="grid grid-pad urow uib_row_3 row-height-3" data-uib="layout/row" data-ver="0">
 						<div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
 							<div class="widget-container content-area vertical-col">
-								<button class="btn widget uib_w_4 d-margins btn-warning" data-uib="twitter%20bootstrap/button" data-ver="1" data-toggle="modal" data-target="#myModal" id="adddata"><i class="glyphicon glyphicon-plus button-icon-left" data-position="left"></i>Tambah</button>
 								<div class="tarea widget uib_w_3 d-margins" data-uib="media/text" data-ver="0" name="uib_w_3">
 									<div class="widget-container left-receptacle"></div>
 									<div class="widget-container right-receptacle"></div>
 									<div>
+                                        <button class="btn widget uib_w_4 d-margins btn-warning" data-uib="twitter%20bootstrap/button" data-ver="1" data-toggle="modal" data-target="#modal-detail" id="adddata"><i class="glyphicon glyphicon-plus button-icon-left" data-position="left"></i>Tambah</button>
 										<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
 											<thead>
 												<tr>
-													<th>No</th>
-													<th>RPK</th>
-													<th>Komoditi</th>
-													<th>Jumlah</th>
-													<th>Harga</th>
 													<th>Tanggal</th>
+													<th>No Req</th>
+													<th>Jumlah</th>
+													<th>Total</th>
+													<th>Status</th>
 													<th>Action</th>
 												</tr>
 											</thead>
+											
 										</table>
 									</div>
 								</div>
-
 								<span class="uib_shim"></span>
 							</div>
 						</div>
 						<span class="uib_shim"></span>
 					</div>
 				</div>
-				<div class="uib-footer footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
-					<h2>2016 © BULOG</h2>
+				<div style="margin-top:100%;" class="uib-footer footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+					<h2>2016 ©  BULOG</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
 					<div class="widget-container content-area horiz-area wrapping-col left"></div>
 					<div class="widget-container content-area horiz-area wrapping-col right"></div>
 				</div>
 			</div>
 		</div>
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			<form method="post" id="validation-form" class="form-horizontal">
-				<input type="hidden" name="idstok" id="idstok">
-				<input type="hidden" name="csrf_rpk_bulog" id="csrf_rpk_bulog">
-				<input type="hidden" name="X-API-KEY" id="X-API-KEY" value="rpkbulogapi">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-							</button>
-							<h4 class="modal-title" id="myModalLabel">Tambah Barang</h4>
+        <!-- Modal Detail -->
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-detail" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                    <h4 class="modal-title">Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="validation-form" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" name="csrf_rpk_bulog" id="csrf_rpk_bulog" />
+                                <input type="hidden" name="X-API-KEY" id="X-API-KEY" value="rpkbulogapi" />
+                            <input type="hidden" id="idtoko" name="idtoko" />
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>Nama RPK:</b></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<select name="namarpk" id="namarpk" class="chosen-select form-control"></select>
+									</div>
+								</div>
 						</div>
-						<div class="modal-body">
-							<div style="margin-left:10px;margin-right:10px;">
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>No Request:</b></label>
 
-								<div class="form-group">
-									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Tanggal:</label>
-
-									<div class="col-xs-12 col-sm-9">
-										<div class="clearfix">
-											<input id="tanggal" name="tanggal" class="wide-control form-control default" type="text" placeholder="Tanggal">
-										</div>
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="norequest" name="norequest" class="wide-control form-control default" type="text" placeholder="No Request">
 									</div>
 								</div>
-								<div class="form-group">
-									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Nama RPK:</label>
-
-									<div class="col-xs-12 col-sm-9">
-										<div class="clearfix">
-											<select name="namarpk" id="namarpk" class="chosen-select form-control"></select>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Komoditi:</label>
-
-									<div class="col-xs-12 col-sm-9">
-										<div class="clearfix">
-											<select name="komoditi" id="komoditi" class="chosen-select form-control"></select>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Jumlah:</label>
-
-									<div class="col-xs-12 col-sm-9">
-										<div class="clearfix">
-											<input class="wide-control form-control default" type="number" value="1" name="jumlah" id="jumlah" min="1" placeholder="Jumlah">
-										</div>
-									</div>
-								</div>
-
-							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-success"><i class="glyphicon glyphicon-ok button-icon-left" data-position="left"></i>Save</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Tanggal:</label>
 
-		<!-- end modal -->
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="tanggal" name="tanggal" class="wide-control form-control default" type="text" placeholder="Tanggal">
+									</div>
+								</div>
+						</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Total:</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="alltotal" class="wide-control form-control default" type="text" placeholder="Total">
+									</div>
+								</div>
+						</div>
+                    <!--table detail-->
+                    <table id="detail" class="table display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Komoditi</th>
+                            <th>Jumlah</th>
+                            <th>Harga</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                    </table>
+                        <hr />
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>Komoditi:</b></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<select id="komoditi" class="chosen-select form-control">
+									</select>
+									</div>
+								</div>
+						</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>Jumlah:</b></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input id="jumlah" class="wide-control form-control default" type="number" placeholder="Jumlah">
+									</div>
+								</div>
+						</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<button type="button" class="btn btn-primary" id="add-row">Tambahkan</button>
+									</div>
+								</div>
+						</div>
+                        <!--table detail-->
+                    <table id="tabletambah" class="table display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Komoditi</th>
+                            <th>Jumlah</th>
+                            <th>Harga</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                    </table>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<button type="submit" id="bt-save" class="btn btn-primary" id="add-row">Save</button>
+									</div>
+								</div>
+						</div>
+                    <!--</div>-->
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
 	</body>
 
 </html>

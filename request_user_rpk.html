@@ -11,7 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/chosen.css">
 		<meta charset="UTF-8">
-		<title>Penjualan Komoditi</title>
+		<title>Request Stok</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 		<!--
@@ -81,22 +81,22 @@
         <script src="js/toastr/toastr.min.js"></script>
 		<script type="text/javascript" class="init">
             function combo_komoditi(){
-                $("#barang").chosen({width: "100%"});
-                $.ajax({
-                    url: "http://"+ipserver+"/api/stok_rpk/?X-API-KEY=rpkbulogapi&status=1&idtoko="+localStorage.getItem("myidtoko")+"&format=json",
-                    success: function(response) {
-                        $("#barang").empty();
-                        $("#barang").append($("<option></option>").val('').html(''));
-                        $.each(response.aaData, function () {
-                            $("#barang").append($("<option></option>").val(this[1]+'|'+this[2]+'|'+this[3]+'|'+this[4]).html(this[2]));
-                        });
-                        $('#barang').trigger('chosen:updated');
-                    },
-                    error: function(response){
-                        console.log('error');
-                    }
-                });
-            }
+			                $("#komoditi").chosen({width: "100%"});
+			                $.ajax({
+			                    url: "http://"+ipserver+"/api/komoditi_rpk/?X-API-KEY=rpkbulogapi&format=json",
+			                    success: function(response) {
+			                        $("#barang").empty();
+			                        $("#barang").append($("<option></option>").val('').html(''));
+			                        $.each(response.aaData, function () {
+			                            $("#barang").append($("<option></option>").val(this[0]+"|"+this[2]+"|"+this[4]).html(this[2]));
+			                        });
+			                        $('#barang').trigger('chosen:updated');
+			                    },
+			                    error: function(response){
+			                        console.log('error');
+			                    }
+			                });
+			 }
             function calculate(){
                 y = document.getElementsByName('jumlah[]');
                 z = document.getElementsByName('harga[]');
@@ -110,15 +110,13 @@
                 $("#alltotal").val(alltotal);
             }
             
-            function check(){
+            /*function check(){
                 x = document.getElementsByName('namabarang[]');
                 y = document.getElementsByName('jumlah[]');
                 z = document.getElementsByName('max[]');
                 var ret = true;
                 for(s=0;s<y.length;s++){
-                    //console.log(x[s].value+" = "+y[s].value+" lebih besar "+z[s].value);
                     if(parseInt(y[s].value) > parseInt(z[s].value)){
-                        //console.log("berhenti");
                         ret = false;
                         alert("Komoditi "+x[s].value+" anda kurang");
                         y[s].focus();
@@ -126,17 +124,16 @@
                         break;
                     }
                 }
-                //console.log(y.length);
                 return ret;
                 
-            }
+            }*/
             
-            function kembalianku(){
+            /*function kembalianku(){
                 var kembali = $("#dibayar").val()-$("#alltotal").val();
                 if(kembali >= 0){
                     $("#kembali").val(kembali);
                 }
-            }
+            }*/
             
 			jQuery(function($) {
                 combo_komoditi();
@@ -144,8 +141,8 @@
                     $('#validation-form input[name=csrf_rpk_bulog]').val(data.thash);
                    // console.log(data.thash);
                      });
-                $.get("http://"+ipserver+"/api/penjualan_komoditi/getnota", {'X-API-KEY':"rpkbulogapi",'idtoko':localStorage.getItem("myidtoko")}, function(data){
-                                    $('#nota').val(data.status);
+                $.get("http://"+ipserver+"/api/komoditi_rpk/getrequest", {'X-API-KEY':"rpkbulogapi",'idtoko':localStorage.getItem("myidtoko")}, function(data){
+                                    $('#norequest').val(data.status);
                     //console.log(data.status);
                 });
                 $("#bt-dashboard").on("click", function(){
@@ -205,9 +202,9 @@
                     //if($("#add-row-form").isValid()) {
                         
                         t.row.add( [
-                            splitkomoditi[1]+"<input type='hidden' name='kodebarang[]' value='"+splitkomoditi[0]+"' /><input type='hidden' name='namabarang[]' value='"+splitkomoditi[1]+"' /><input type='hidden' name='max[]' value='"+splitkomoditi[2]+"' /><input type='hidden' name='harga[]' value='"+splitkomoditi[3]+"' />",
+                            splitkomoditi[1]+"<input type='hidden' name='kodebarang[]' value='"+splitkomoditi[0]+"' /><input type='hidden' name='harga[]' value='"+splitkomoditi[2]+"' />",
                             "<input type='number' min='1' onkeyup='calculate();' name='jumlah[]' value='"+jumlah+"' />",
-                            splitkomoditi[3],
+                            splitkomoditi[2],
                             "<input type='number' readonly name='total[]' />",
                             "<a title='Delete' style='cursor: pointer;' id='mydelete'>Hapus</a>"
                         ] ).draw(false);
@@ -230,12 +227,8 @@
                     tanggal: {
                         required:true
                     },
-                    nota: {
+                    norequest: {
                         maxlength: 255,
-                        required:true
-                    },
-                    dibayar: {
-                        number: true,
                         required:true
                     }
                 },
@@ -244,12 +237,8 @@
                     tanggal: {
                         required: "Tolong isi Tanggal"
                     },
-                    nota: {
-                        required: "Tolong isi Nota"
-                    },
-                    dibayar: {
-                        required: "Tolong isi Pembayaran",
-                        number: "Data Harus Angka"
+                    norequest: {
+                        required: "Tolong isi No Request"
                     }
                 },
 
@@ -273,10 +262,10 @@
                 arr.push({name:'idtoko', value:localStorage.getItem("myidtoko")});
                 
             },
-            url:"http://"+ipserver+"/api/penjualan_komoditi/insert",
+            url:"http://"+ipserver+"/api/stok_rpk/insertreq",
             beforeSend: function(arr) {
                 //$("#preloader").fadeIn("slow");
-                return check();
+               // return check();
             },
             uploadProgress: function(event, position, total, percentComplete) {
                 //$("#preloader").fadeIn("slow");
@@ -317,7 +306,7 @@
 		<div class="upage" id="mainpage">
 			<div class="upage-outer">
 				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
-					<h2>PENJUALAN</h2>
+					<h2>REQUEST</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
 					<div class="widget-container content-area horiz-area wrapping-col left">
                     <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
@@ -365,34 +354,26 @@
 
                                         <div class="col-xs-12 col-sm-9">
                                             <div class="clearfix">
-												<input readonly name="alltotal" id="alltotal" class="wide-control form-control default" type="text" placeholder="total">
+												<input readonly name="alltotal" id="alltotal" class="wide-control form-control default" type="text" placeholder="Total">
                                             </div>
                                         </div>
                                 </div>
 								<div class="form-group">
-                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Dibayar:</label>
+                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">No. Request:</label>
 
                                         <div class="col-xs-12 col-sm-9">
                                             <div class="clearfix">
-												<input id="dibayar" name="dibayar" onkeyup="kembalianku();" class="wide-control form-control default" type="text" placeholder="Dibayar">
+												<input readonly class="wide-control form-control default" type="text" name="norequest" id="norequest" placeholder="No. Request">
                                             </div>
                                         </div>
                                 </div>
-								<div class="form-group">
-                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Kembali:</label>
+                                    <div class="form-group">
+                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>Note</b></label>
 
                                         <div class="col-xs-12 col-sm-9">
                                             <div class="clearfix">
-												<input readonly id="kembali" name="kembali" class="wide-control form-control default" type="text" placeholder="Kembali">
-                                            </div>
-                                        </div>
-                                </div>
-								<div class="form-group">
-                                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">No. Nota:</label>
-
-                                        <div class="col-xs-12 col-sm-9">
-                                            <div class="clearfix">
-												<input readonly class="wide-control form-control default" type="text" name="nota" id="nota" placeholder="No. Nota">
+												*Harga Belum termasuk Ongkos Kirim
+                                                <!--<input id="dibayar" name="dibayar" onkeyup="kembalianku();" class="wide-control form-control default" type="text" placeholder="Dibayar">-->
                                             </div>
                                         </div>
                                 </div>

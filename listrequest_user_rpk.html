@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
 		<meta charset="UTF-8">
-		<title>Inventori RPK</title>
+		<title>List Request</title>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
 		<!--
@@ -71,28 +71,61 @@
 		</script>
 		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js">
 		</script>
+        <script src="js/bootbox.js"></script>
 		<script type="text/javascript" class="init">
 			jQuery(function($) {
                 $("#bt-dashboard").on("click", function(){
                             window.location = "dashboard_user_rpk.html";
                     });
                 var table = $('#example').DataTable( {
-                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/?X-API-KEY=rpkbulogapi&status=1&idtoko="+localStorage.getItem("myidtoko")+"&format=json", "dataSrc": "aaData" },
+                        "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/allrequest?X-API-KEY=rpkbulogapi&idtoko="+localStorage.getItem("myidtoko")+"&status=0&format=json", "dataSrc": "aaData" },
                         "columns": [
-                            { "data": null },
-                            { "data": 2 },
-                            { "data": 3 },
-                            { "data": 4 }
+                            { "data": 4 },
+                            { "data": 1 },
+                            { "data": 7 },
+                            { "data": 8 },
+                            { "data": null }
                         ],
-                        "fnCreatedRow": function (row, data, index) {
-							$('td', row).eq(0).html(index + 1);
-						},
+                        "order": [[ 0, "desc" ]],
+                        "columnDefs": [ {
+                            "targets": -1,
+                            "defaultContent":
+                                "<a  title='View' style='cursor: pointer;' id='mydetail'><i class=\"fa fa-pencil\"></i>View</a> "
+                        } ],
+                        scrollY: '250px',
                         deferRender:    true,
                         scroller:       true,
                         "processing": true,
                         "serverSide": false,
                         "scrollX": true
                 } );
+                
+                var detail = $('#detail').DataTable( {
+                                "ajax": "http://"+ipserver+"/api/stok_rpk/detail?X-API-KEY=rpkbulogapi&noreq=&format=json",
+                    "columns": [
+                            { "data": 4 }, //komoditi
+                            { "data": 10 }, //jumlah
+                            { "data": 6 }, //harga
+                            { data: null, render: function ( data, type, row ) {
+                                return row[10]*row[6];
+                            } }, // Total
+                        ],
+                                deferRender:    true,
+                                scroller:       true,
+                                "processing": true,
+                                "serverSide": false,
+                                "scrollX": true
+                            } );
+                $('#example tbody').on( 'click', '#mydetail', function () {
+                    var data = table.row( $(this).parents('tr') ).data();
+                    $('#noreq').val(data[1]);
+                    $('#tanggal').val(data[4]);
+                    $('#total').val(data[8]);
+                    //$('#dibayar').val(data[8]);
+                    //$('#kembali').val(data[9]);
+                    detail.ajax.url( "http://"+ipserver+"/api/stok_rpk/detail?X-API-KEY=rpkbulogapi&noreq="+data[1]+"&format=json" ).load();
+                    $('#modal-detail').modal('show');
+                });
 			 } );
 		</script>
 	</head>
@@ -104,7 +137,7 @@
 		<div class="upage" id="mainpage">
 			<div class="upage-outer">
 				<div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
-					<h2>INVENTORY</h2>
+					<h2>LIST REQUEST</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
 					<div class="widget-container content-area horiz-area wrapping-col left">
                     <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
@@ -124,10 +157,11 @@
 										<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
 											<thead>
 												<tr>
-													<th>No.</th>
-													<th>Nama Barang</th>
+													<th>Tanggal</th>
+													<th>No Req</th>
 													<th>Jumlah</th>
-													<th>Harga</th>
+													<th>Total</th>
+													<th>Action</th>
 												</tr>
 											</thead>
 											
@@ -140,14 +174,73 @@
 						<span class="uib_shim"></span>
 					</div>
 				</div>
-				<div class="uib-footer footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
-					<h2>2016 © BULOG</h2>
+				<div style="margin-top:100%;" class="uib-footer footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+					<h2>2016 ©  BULOG</h2>
 					<div class="widget-container wrapping-col single-centered"></div>
 					<div class="widget-container content-area horiz-area wrapping-col left"></div>
 					<div class="widget-container content-area horiz-area wrapping-col right"></div>
 				</div>
 			</div>
 		</div>
+        <!-- Modal Detail -->
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal-detail" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">x</button>
+                    <h4 class="modal-title">Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username"><b>No Request:</b></label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="noreq" class="wide-control form-control default" type="text" placeholder="No Request">
+									</div>
+								</div>
+						</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Tanggal:</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="tanggal" class="wide-control form-control default" type="text" placeholder="Tanggal">
+									</div>
+								</div>
+						</div>
+                        <div class="form-group">
+								<label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">Total:</label>
+
+								<div class="col-xs-12 col-sm-9">
+									<div class="clearfix">
+										<input readonly id="total" class="wide-control form-control default" type="text" placeholder="Total">
+									</div>
+								</div>
+						</div>
+                    <!--table detail pembayaran retribusi-->
+                    <table id="detail" class="table display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Komoditi</th>
+                            <th>Jumlah</th>
+                            <th>Harga</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <!--</div>-->
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
 	</body>
 
 </html>

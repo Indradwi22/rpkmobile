@@ -81,7 +81,10 @@
                     }); 
                 $("#bt-toko").on("click", function(){
                             window.location = "toko_admin_rpk.html";
-                    }); 
+                    });
+                $("#bt-lokasi").on("click", function(){
+                            window.location = "listmap_admin_rpk.html";
+                    });
                 $("#bt-logout").on("click", function(){
                     alert('Berhasil Logout');
                     localStorage.removeItem("myid");
@@ -105,6 +108,8 @@
                     <div class="widget-container wrapping-col single-centered"></div>
                     <div class="widget-container content-area horiz-area wrapping-col left"></div>
                     <div class="widget-container content-area horiz-area wrapping-col right">
+                        <button class="btn widget uib_w_5 d-margins btn-danger" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-logout"><i class="glyphicon glyphicon-off" data-position="icon only"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
@@ -118,14 +123,14 @@
                                         <button style="height:100px;" class="btn widget uib_w_3 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-tambah"><i class="glyphicon glyphicon-inbox button-icon-top" data-position="top"></i>Stok RPK</button>
                                     </div>
                                     <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_9 section-dimension-9" data-uib="layout/card" data-ver="0">
-                                        <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-toko"><i class="glyphicon glyphicon-file button-icon-top" data-position="top"></i>Toko</button>
-										<!--<button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-retur"><i class="glyphicon glyphicon-usd button-icon-top" data-position="top"></i>Retur</button>-->
+                                        <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-toko"><i class="glyphicon glyphicon-home button-icon-top" data-position="top"></i>Toko</button>
+                                        <!--<button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-retur"><i class="glyphicon glyphicon-usd button-icon-top" data-position="top"></i>Retur</button>-->
                                     </div>
                                     <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_10 section-dimension-10" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-laporan"><i class="glyphicon glyphicon-file button-icon-top" data-position="top"></i>Laporan RPK</button>
                                     </div>
                                     <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_11 section-dimension-11" data-uib="layout/card" data-ver="0">
-                                        <button style="height:100px;" class="btn widget uib_w_5 d-margins btn-danger" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-logout"><i class="glyphicon glyphicon-off button-icon-top" data-position="top"></i>Logout</button>
+                                        <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-lokasi"><i class="glyphicon glyphicon-globe button-icon-top" data-position="top"></i>Lokasi RPK</button>
                                     </div>
                                 </div>
                                 <span class="uib_shim"></span>

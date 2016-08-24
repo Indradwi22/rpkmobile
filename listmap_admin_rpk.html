@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <!--
+  * Please see the included README.md file for license terms and conditions.
+  -->
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<!--<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">-->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+        <meta charset="UTF-8">
+        <title>List Maps RPK</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+        <!--
+  * The "meta viewport" tag (below) helps your app size appropriately to a device's ideal viewport.
+  * Note that Windows device viewports work better when initialized using the @viewport CSS rule.
+  * For a quick overview of "meta viewport" and @viewport, see this article:
+  *   http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-dont-forget-the-viewport-meta-tag
+  * To see how it works, try your app on a real device with and without a "meta viewport" tag.
+  * Additional useful references include:
+  *   http://www.quirksmode.org/mobile/viewports.html
+  *   http://www.quirksmode.org/mobile/metaviewport/devices.html
+  *   https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html
+-->
+
+        <!-- <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1"> -->
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=1, maximum-scale=2"> -->
+
+        <style>
+            /* following three (cascaded) are equivalent to above three meta viewport statements */
+            /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html */
+            /* see http://dev.w3.org/csswg/css-device-adapt/ */
+                @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
+                @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+                /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
+        </style>
+
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" type="text/css" href="css/index_main.less.css" class="main-less">
+
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work below -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+
+        <!-- Recommended location for your JavaScript libraries -->
+        <!-- These library references (below) are just examples to give you the general idea... -->
+        <!-- <script src="lib/mc/hammer.js"></script> -->
+        <!-- <script src="lib/ft/fastclick.js"></script> -->
+
+        <!--
+  * cordova.js is a phantom lib for "Cordova HTML5 web app," it does nothing in a "Standard HTML5 web app"
+  * Seeing a "Failed to load resource: net::ERR_FILE_NOT_FOUND" message caused by this "cordova.js" script?
+  * The cordova.js script is required if you convert your "Standard HTML5" project into a "Cordova" project.
+  * You can safely ignore the error or comment out this line if you will not be developing a Cordova app.
+-->
+        <script src="cordova.js" id="xdkJScordova_"></script>
+
+        <script src="js/app.js"></script>
+        <!-- for your event code, see README and file comments for details -->
+        <script src="js/init-app.js"></script>
+        <!-- for your init code, see README and file comments for details -->
+        <script src="xdk/init-dev.js"></script>
+        <!-- normalizes device and document ready events, see file for details -->
+        <script type="application/javascript" src="lib/jquery.min.js"></script>
+        <script type="application/javascript" src="marginal/marginal-position.min.js"></script>
+        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+		</script>
+		<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js">
+		</script>
+        <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
+        <script>
+            function detail(id){
+                $('#example').DataTable().ajax.url( "http://"+ipserver+"/api/stok_rpk/?X-API-KEY=rpkbulogapi&status=1&idtoko="+id+"&format=json" ).load();
+                $('#mytable').show();
+            }
+            jQuery(function($){
+                $('#mytable').hide();
+                if (localStorage.getItem("myid") === null) {
+                    window.location = 'index.html';
+                    alert('Anda harus login terlebih dahulu');
+                }
+               $("#bt-dashboard").on("click", function(){
+                            window.location = "dashboard_admin_rpk.html";
+                });
+                
+                var detail = $('#example').DataTable( {
+                                "ajax": { "url": "http://"+ipserver+"/api/stok_rpk/?X-API-KEY=rpkbulogapi&status=1&idtoko=ABC&format=json", "dataSrc": "aaData" },
+                                "columns": [
+                                        { "data": 2 },
+                                        { "data": 3 },
+                                        { "data": 4 }
+                                ],
+                                deferRender:    true,
+                                scroller:       true,
+                                "processing": true,
+                                "serverSide": false,
+                                "scrollX": true
+                            } );
+            });
+            var mydata = (function () {
+                var json = null;
+                $.ajax({
+                    'async': false,
+                    'global': false,
+                    type: "GET",
+                    url:'http://'+ipserver+'/api/toko_rpk/listmap',
+                    data:{'X-API-KEY':'rpkbulogapi'},
+                    'dataType': "json",
+                    'success': function (data) {
+                        json = data;
+                    }
+                });
+                return json;
+            })();
+            var map;
+            var markers = [];
+            function initialize() {
+                //console.log(mydata);
+                var myOptions = {
+                    center: new google.maps.LatLng(-7.2965579, 112.6728858),
+                    zoom: 11,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                        position: google.maps.ControlPosition.BOTTOM_LEFT
+                    },
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.LARGE,
+                        position: google.maps.ControlPosition.LEFT_BOTTOM
+                    },
+                    panControl: true,
+                    panControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_BOTTOM
+                    },
+                    streetViewControl: false
+                };
+                var map = new google.maps.Map(document.getElementById("map-canvas"),
+                    myOptions);
+                var infowindow = new google.maps.InfoWindow();
+                var latlngbounds = new google.maps.LatLngBounds();
+                var trHTML = "";
+                if(mydata != null) {
+                    $.each(mydata.mydata, function (i, item) {
+                        //trHTML += '<li><a onclick="detail(\''+item.idtoko+'\')">'+item.namatoko+'</a></li>';
+                        var latLng = new google.maps.LatLng(parseFloat(item.location[0]), parseFloat(item.location[1]));
+                        latlngbounds.extend(latLng);
+                        var ket = (item.keterangan == null) ? "" :item.keterangan;
+                        markers[i] = new google.maps.Marker({
+                            position: latLng,
+                            map: map,
+                            html:   "<h4 style='margin-top: 1px!important;margin-bottom: 1px!important;'>Nama Map: " + item.namatoko+'</h4>' +
+                                    "<br>Alamat Map: " + item.alamat+
+                                    "<br>Keterangan: " + ket,
+                            id: item.idtoko
+                        });
+                        google.maps.event.addListener(markers[i], 'mousemove', function () {
+                            infowindow.setContent(this.html);
+                            infowindow.setPosition(this.getPosition());
+                            infowindow.open(map, this);
+                        });
+                        google.maps.event.addListener(markers[i], 'click', function () {
+                            infowindow.setContent(this.html);
+                            infowindow.setPosition(this.getPosition());
+                            infowindow.open(map, this);
+                            detail(this.id);
+                        });
+                    });
+                    map.fitBounds(latlngbounds);
+                }
+                //$("#listmap").append(trHTML).listview("refresh");
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    </head>
+
+    <body>
+        <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+        <!-- Place your remote debugging (weinre) script URL from the Test tab here, if it does not work above -->
+        <!-- <script src="http://debug-software.intel.com/target/target-script-min.js#insertabiglongfunkynumberfromthexdkstesttab"></script> -->
+        <div class="upage" id="mainpage">
+            <div class="upage-outer">
+                <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
+                    <h2>LOKASI RPK</h2>
+                    <div class="widget-container wrapping-col single-centered"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left">
+                        <button class="btn widget uib_w_5 d-margins btn-default" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-dashboard"><i class="glyphicon glyphicon-home" data-position="icon only"></i>
+                        </button>
+                    </div>
+                    <div class="widget-container content-area horiz-area wrapping-col right">
+                    </div>
+                </div>
+                <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
+
+                    <div class="grid grid-pad urow uib_row_1 row-height-1" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+                                <div id="map-canvas" style="width: 100%;height: 200px;"></div>
+                                <span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
+
+                    <div class="grid grid-pad urow uib_row_2 row-height-2" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_2 col-0_12-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+                                <div id="mytable">
+										<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+											<thead>
+												<tr>
+													<th>Nama Barang</th>
+													<th>Jumlah</th>
+													<th>Harga</th>
+												</tr>
+											</thead>
+											
+										</table>
+								</div>
+                            </div>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
+                </div>
+                <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
+                    <h2>2016 © BULOG</h2>
+                    <div class="widget-container wrapping-col single-centered"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col left"></div>
+                    <div class="widget-container content-area horiz-area wrapping-col right"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

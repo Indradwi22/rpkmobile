@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/flash_screen_main.less.css" class="main-less">
+    <link rel="stylesheet" type="text/css" href="css/flash_screen_main.less.css" class="main-less">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <script src="intelxdk.js"></script>
+    <script src="cordova.js"></script>
+    <script src="xhr.js"></script>
+    <script src="xdk/init-dev.js"></script>
+
+    <script type="text/javascript">
+      window.onload=timeout;
+      function timeout(){
+      window.setTimeout("redirect()",1500)}
+      
+      function redirect(){
+      window.location="login.html"
+      return}
+    </script>
+
+  </head>
+
+  <body onload="timeout()">
+
+    <div class="upage vertical-col left" id="mainpage">
+
+      <div class="grid grid-pad urow uib_row_1 row-height-1 row-height-splash-sc-margin" data-uib="layout/row" data-ver="0">
+        <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
+          <div class="widget-container content-area vertical-col">
+            <div class="widget uib_w_1 falsh-screen-margin flash-screen-size" data-uib="media/img" data-ver="0">
+              <figure class="figure-align">
+                <img src="images/RPK.png">
+                <figcaption data-position="bottom"></figcaption>
+              </figure>
+            </div>
+            <span class="uib_shim"></span>
+          </div>
+        </div>
+        <span class="uib_shim"></span>
+      </div>
+    </div>
+  </body>
+
+</html>

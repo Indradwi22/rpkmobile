@@ -25,3 +25,4 @@
 // ...additional event handlers here...
 //var ipserver = '10.254.23.116/rpkbulog-service';
 var ipserver = '192.168.1.152/rpkbulog-service';
+//var ipserver = 'bulogrpk.esy.es/index.php';

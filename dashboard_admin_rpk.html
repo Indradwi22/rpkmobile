@@ -66,6 +66,7 @@
         <script type="application/javascript" src="js/dashboard_scripts.js"></script>
         <script>
             jQuery(function($){
+                $("#namadc").html(localStorage.getItem("mynamatoko"));
                 if (localStorage.getItem("myid") === null) {
                     window.location = 'index.html';
                     alert('Anda harus login terlebih dahulu');
@@ -90,8 +91,9 @@
                     localStorage.removeItem("myid");
                     localStorage.removeItem("myrole");
                     localStorage.removeItem("myidtoko");
+                    localStorage.removeItem("myidentitas");
                     localStorage.removeItem("mynamatoko");
-                    window.location='index.html';
+                    window.location='login.html';
                 });
             });
         </script>
@@ -104,7 +106,6 @@
         <div class="upage" id="mainpage">
             <div class="upage-outer">
                 <div class="uib-header header-bg container-group inner-element uib_w_1" data-uib="layout/header" data-ver="0">
-                    <h2>ADMIN BULOG</h2>
                     <div class="widget-container wrapping-col single-centered"></div>
                     <div class="widget-container content-area horiz-area wrapping-col left"></div>
                     <div class="widget-container content-area horiz-area wrapping-col right">
@@ -112,36 +113,56 @@
                         </button>
                     </div>
                 </div>
+                <h2><center><b><font id="namadc" color="#00469c" face="arial"></font></b></center></h2>
                 <div class="upage-content ac0 content-area vertical-col left" id="page_53_79">
+                    <div class="grid grid-pad urow uib_row_6 row-height-6" data-uib="layout/row" data-ver="0">
+                        <div class="col uib_col_7 col-0_12-12" data-uib="layout/col" data-ver="0">
+                            <div class="widget-container content-area vertical-col">
+                                <div class="widget uib_w_17 img-rpk-login-size rpk-img-login-margin" data-uib="media/img" data-ver="0">
+                                    <figure class="figure-align">
+                                        <img src="images/RPK.png">
 
+                                        <figcaption data-position="bottom"></figcaption>
+                                    </figure>
+                                </div><span class="uib_shim"></span>
+                            </div>
+                        </div>
+                        <span class="uib_shim"></span>
+                    </div>
                     <div class="grid grid-pad urow uib_row_2 row-height-2" data-uib="layout/row" data-ver="0">
                         <div class="col uib_col_1 col-0_12-12" data-uib="layout/col" data-ver="0">
                             <div class="widget-container content-area vertical-col">
-
-                                <div class="card_grid widget uib_w_7 wrapping-col d-margins flex-basis-7" data-uib="layout/card_grid" data-ver="0">
-                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_8 section-dimension-8" data-uib="layout/card" data-ver="0">
+                                <div class="card_grid widget uib_w_12 wrapping-col d-margins flex-basis-12" data-uib="layout/card_grid" data-ver="0">
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_13 section-dimension-13" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_3 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-tambah"><i class="glyphicon glyphicon-inbox button-icon-top" data-position="top"></i>Stok RPK</button>
                                     </div>
-                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_9 section-dimension-9" data-uib="layout/card" data-ver="0">
-                                        <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-toko"><i class="glyphicon glyphicon-home button-icon-top" data-position="top"></i>Toko</button>
-                                        <!--<button style="height:100px;" class="btn widget uib_w_4 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-retur"><i class="glyphicon glyphicon-usd button-icon-top" data-position="top"></i>Retur</button>-->
-                                    </div>
-                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_10 section-dimension-10" data-uib="layout/card" data-ver="0">
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_14 section-dimension-14" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-laporan"><i class="glyphicon glyphicon-file button-icon-top" data-position="top"></i>Laporan RPK</button>
                                     </div>
-                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_11 section-dimension-11" data-uib="layout/card" data-ver="0">
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_15 section-dimension-15" data-uib="layout/card" data-ver="0">
+                                        <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-toko"><i class="glyphicon glyphicon-home button-icon-top" data-position="top"></i>Toko</button>
+                                    </div>
+                                    <div class="widget widget-container content-area vertical-col uib-card cpad-0 uib_w_16 section-dimension-16" data-uib="layout/card" data-ver="0">
                                         <button style="height:100px;" class="btn widget uib_w_6 d-margins btn-primary" data-uib="twitter%20bootstrap/button" data-ver="1" id="bt-lokasi"><i class="glyphicon glyphicon-globe button-icon-top" data-position="top"></i>Lokasi RPK</button>
                                     </div>
                                 </div>
+
                                 <span class="uib_shim"></span>
                             </div>
                         </div>
                         <span class="uib_shim"></span>
                     </div>
                 </div>
-                <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_2" data-uib="layout/footer" data-ver="0">
-                    <h2>2016 © BULOG</h2>
-                    <div class="widget-container wrapping-col single-centered"></div>
+                <div class="uib-footer uib-footer-fixed footer-bg container-group inner-element uib_w_12" data-uib="layout/footer" data-ver="0">
+                    <h2></h2>
+                    <div class="widget-container wrapping-col single-centered">
+                        <div class="widget uib_w_13 copyright-size" data-uib="media/img" data-ver="0">
+                            <figure class="figure-align">
+                                <img src="images/bulogfooter.png">
+                                <figcaption data-position="bottom"></figcaption>
+                            </figure>
+                        </div>
+                    </div>
                     <div class="widget-container content-area horiz-area wrapping-col left"></div>
                     <div class="widget-container content-area horiz-area wrapping-col right"></div>
                 </div>
